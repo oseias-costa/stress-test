@@ -18,8 +18,8 @@ async function index() {
     format: 'Loading | {bar} | {percentage}% | ETA: {eta}s | {value}/{total}'
   })
 
-  const numbersOfOrganizations = 10
-  const numbersOfEnvironments = 2
+  const numbersOfOrganizations = 30
+  const numbersOfEnvironments = 4
 
   bar.start(numbersOfOrganizations - 1, 0)
 
@@ -74,7 +74,7 @@ async function insertResource(kindId) {
 
 async function insertResourceDgraph(name, type, parentId) {
   const res = await axios({
-    url: "http://localhost:3080/resource/create",
+    url: process.env.API_DGRAPH_ENDPOINT,
     method: "post",
     data: {
       resourceName: name,
