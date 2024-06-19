@@ -1,0 +1,7 @@
+type Resource {
+    id: ID!
+    name: String!
+    type: String!
+    parent: Resource
+    children: [Resource] @hasInverse(field: parent)
+}

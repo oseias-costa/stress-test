@@ -1,0 +1,37 @@
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  up-mysql: 
+    desc: Up Mysql 
+    cmds: 
+      - MYSQL_PWD=mysqlroot mysql --host 127.0.0.1 --port 3316 --user root < ./schema.sql
+  
+  up-dgraph-db:
+    desc: Up Dgraph Db
+    cmds: 
+      - docker run --name dgraph-container -d -p "8080:8080" -p "9080:9080" dgraph/standalone
+  
+  up-dgraph-schema:
+    desc: Up Dgraph Schema
+    cmds: 
+      - curl -X POST localhost:8080/admin/schema --data-binary '@schema.graphql'
+
+  create-dgraph-root:
+    desc: Create root
+    cmds: 
+      - |
+        curl -X POST \
+          -H "Content-Type: application/json" \
+          -d '{
+            "query": "mutation { addResource(input: { name: \"root\", type: \"ROOT\" }) { resource { id name type } } }"
+          }' \
+          http://localhost:8080/graphql
+
+  default:
+    cmds:
+      - task --list-all
+
+
